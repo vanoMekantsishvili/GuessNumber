@@ -1,32 +1,65 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 
-import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from '../components/Themed';
+import { View } from '../components/Themed';
+import { Button, FlatList } from 'react-native';
+import AddGoal from '../components/AddGoal'
+import ListItem from '../components/ListItem'
 
+export interface GoalInterface {
+  id: string,
+  value: string
+}
+
+// Practice - Add and remove items from the list.
 export default function TabOneScreen() {
-  return (
+  
+  const [courseGoals, setCourseGoals] = useState<GoalInterface[]>([])
+  const [isAddMode, setIsAddMode] = useState<boolean>(false);
+
+  const onGoalDelete = (goalId: string) => {
+    setCourseGoals(currentGoals => currentGoals.filter(goal => goal.id !== goalId))
+  }
+
+  return ( 
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="/screens/TabOneScreen.tsx" />
+        <Button title="Add New Goal" onPress={() => setIsAddMode(true)} />
+        <AddGoal
+          visible={isAddMode}
+          addGoal={(newGoal) => {
+            setCourseGoals(currentGoals => [...currentGoals, newGoal])
+            setIsAddMode(false);
+          } }
+          onCancel={() => {
+            console.log("CANCEL");
+            setIsAddMode(false)
+          } }
+        />
+
+        <FlatList
+          keyExtractor={item => item.id}
+          data={courseGoals}
+          renderItem={itemData => (
+            <ListItem id={itemData.item.id} value={itemData.item.value} onDelete={onGoalDelete}/>
+          )}
+        />
+
+        {/* <ScrollView>
+          {courseGoals.map(goal => <View key={goal}><Text>{goal}</Text></View>)}
+        </ScrollView> */}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 30,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
+  listItem: {
+    padding: 10,
+    marginVertical: 10,
+    backgroundColor: '#ccc',
+    borderColor: 'black',
+    borderWidth: 1
+  }
 });
