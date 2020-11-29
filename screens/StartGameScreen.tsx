@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View, Button, TouchableWithoutFeedback, Keyboard,  } from 'react-native'
+import { StyleSheet, Text, View, Button, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native'
 import Card from '../components/Card'
 import Input from '../components/Input'
+import NumberContainer from '../components/NumberContainer'
 import Colors from '../constants/Colors'
 
 const StartGameScreen = () => {
@@ -21,13 +22,31 @@ const StartGameScreen = () => {
   const confirmInputHandler = () => {
     let chosenNumber = parseInt(enteredValue)
 
-    if(chosenNumber === NaN || chosenNumber <= 0 || chosenNumber > 99) {
+    if(isNaN(chosenNumber) || chosenNumber <= 0 || chosenNumber > 99) {
+      console.log("test")
+      Alert.alert(
+        'Invalid number!', 
+        'Number has to be between 1 and 99.', 
+        [{text: 'Okay', style: 'destructive', onPress: resetInputHandler}]
+      )
       return
     }
 
     setConfirmed(true)
     setEnteredValue('')
     setSelectedNumber(chosenNumber)
+    Keyboard.dismiss()
+  }
+
+  let confirmedOutput
+  if(confirmed && selectedNumber) {
+    confirmedOutput = (
+      <Card style={styles.summeryContainer}>
+        <Text>You selected number:</Text>
+        <NumberContainer selectedNumber={selectedNumber}/>
+        <Button title="START GAME" onPress={()=>{}}/>
+      </Card>
+    )
   }
 
   return (
@@ -56,7 +75,7 @@ const StartGameScreen = () => {
           </View>
         </View>
       </Card>
-      { confirmed ? <Text>{selectedNumber}</Text> : null}
+      { confirmedOutput }
     </View>
     </TouchableWithoutFeedback>
   )
@@ -86,5 +105,9 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'space-between',
     paddingHorizontal: 15
+  },
+  summeryContainer: {
+    marginTop: 20,
+    alignItems: 'center'
   }
 }) 
