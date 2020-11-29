@@ -23,7 +23,6 @@ const StartGameScreen = () => {
     let chosenNumber = parseInt(enteredValue)
 
     if(isNaN(chosenNumber) || chosenNumber <= 0 || chosenNumber > 99) {
-      console.log("test")
       Alert.alert(
         'Invalid number!', 
         'Number has to be between 1 and 99.', 
