@@ -8,5 +8,9 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "strict": true
-  }
+  },
+  "plugins": [
+    "react",
+    "react-native"
+  ]
 }
